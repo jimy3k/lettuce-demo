@@ -149,19 +149,19 @@ public class LettuceDemoApplicationTests {
         //设值
         listOperations.leftPush("students","牛二");
         listOperations.leftPush("students","马妞");
-        listOperations.leftPushAll("students","张三","李四","王五","戴森");
+        listOperations.leftPushAll("students", "张三", "李四", "王五", "戴森");
 
-        listOperations.rightPush("students","哈哈儿");
-        listOperations.rightPushAll("students","李铁","虎妞","郝丹");
+        listOperations.rightPush("students", "哈哈儿");
+        listOperations.rightPushAll("students", "李铁", "虎妞", "郝丹");
 
         //取值,全部
         List<Object> list = new ArrayList<>();
-        list = listOperations.range("students",0,-1);
+        list = listOperations.range("students", 0, -1);
         assert list != null;
         list.forEach(System.out::println);
 
         //取值,根据索引
-        Object obj = listOperations.index("students",0);
+        Object obj = listOperations.index("students", 0);
         System.out.println(obj);
     }
 
@@ -172,10 +172,10 @@ public class LettuceDemoApplicationTests {
     public void testSet() {
 
         //通过Redis模板类，取得键值类型对应的操作类
-        SetOperations<String,Object> setOperations = redisTemplate.opsForSet();
+        SetOperations<String, Object> setOperations = redisTemplate.opsForSet();
 
         //设值
-        setOperations.add("Sets","牛二","张三","李四","王五","戴森");
+        setOperations.add("Sets", "牛二", "张三", "李四", "王五", "戴森");
 
         //取值
         long size = setOperations.size("Sets");
@@ -187,7 +187,7 @@ public class LettuceDemoApplicationTests {
         set.forEach(System.out::println);
 
         //删除
-        long dele = setOperations.remove("Sets","戴森");
+        long dele = setOperations.remove("Sets", "戴森");
         System.out.println(dele);
     }
 
@@ -198,26 +198,26 @@ public class LettuceDemoApplicationTests {
     public void testSortedSet() {
 
         //通过Redis模板类，取得键值类型对应的操作类
-        ZSetOperations<String,Object> zSetOperations = redisTemplate.opsForZSet();
+        ZSetOperations<String, Object> zSetOperations = redisTemplate.opsForZSet();
 
         //设值
-        zSetOperations.add("ZSets","牛二",12D);
-        zSetOperations.add("ZSets","张三",13D);
-        zSetOperations.add("ZSets","李四",14D);
-        zSetOperations.add("ZSets","王五",15D);
-        zSetOperations.add("ZSets","戴森",16D);
+        zSetOperations.add("ZSets", "牛二", 12D);
+        zSetOperations.add("ZSets", "张三", 13D);
+        zSetOperations.add("ZSets", "李四", 14D);
+        zSetOperations.add("ZSets", "王五", 15D);
+        zSetOperations.add("ZSets", "戴森", 16D);
 
         //取值
         long size = zSetOperations.size("ZSets");
         System.out.println(size);
 
-        Set<Object> set = zSetOperations.range("ZSets",0,-1);
+        Set<Object> set = zSetOperations.range("ZSets", 0, -1);
 
         assert set != null;
         set.forEach(System.out::println);
 
         //删除
-        long dele = zSetOperations.remove("ZSets","戴森");
+        long dele = zSetOperations.remove("ZSets", "戴森");
         System.out.println(dele);
     }
 
@@ -237,13 +237,13 @@ public class LettuceDemoApplicationTests {
     @Test
     public void testExpired() {
         //设值时设置失效时间
-        ValueOperations<String,Object> valueOperations = redisTemplate.opsForValue();
-        valueOperations.set("code","123456",30, TimeUnit.SECONDS);
+        ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
+        valueOperations.set("code", "123456", 30, TimeUnit.SECONDS);
 
         //给已存在值设置失效时间
-        redisTemplate.expire("code",18,TimeUnit.SECONDS);
+        redisTemplate.expire("code", 18, TimeUnit.SECONDS);
         //查询失效时间
-        long time = redisTemplate.getExpire("code",TimeUnit.SECONDS);
+        long time = redisTemplate.getExpire("code", TimeUnit.SECONDS);
         System.out.println(time);
     }
 }

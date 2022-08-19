@@ -22,8 +22,8 @@ spring:
         max-idle: 200
         # 最小空闲连接，默认 0
         min-idle: 5
-    # 哨兵
-    #sentinel:
+      # 哨兵
+      #sentinel:
       # Redis 集群主节点
       #master: mymaster
       # 哨兵节点
