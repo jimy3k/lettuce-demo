@@ -4,15 +4,10 @@ import com.nicole.demo.pojo.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.ListOperations;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.core.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @SpringBootTest
 public class LettuceDemoApplicationTests {
@@ -159,10 +154,96 @@ public class LettuceDemoApplicationTests {
         listOperations.rightPush("students","哈哈儿");
         listOperations.rightPushAll("students","李铁","虎妞","郝丹");
 
-        //设值
+        //取值,全部
         List<Object> list = new ArrayList<>();
         list = listOperations.range("students",0,-1);
         assert list != null;
         list.forEach(System.out::println);
+
+        //取值,根据索引
+        Object obj = listOperations.index("students",0);
+        System.out.println(obj);
+    }
+
+    /**
+     * RedisTemplate 操作Set类型数据
+     */
+    @Test
+    public void testSet() {
+
+        //通过Redis模板类，取得键值类型对应的操作类
+        SetOperations<String,Object> setOperations = redisTemplate.opsForSet();
+
+        //设值
+        setOperations.add("Sets","牛二","张三","李四","王五","戴森");
+
+        //取值
+        long size = setOperations.size("Sets");
+        System.out.println(size);
+
+        Set<Object> set = setOperations.members("Sets");
+
+        assert set != null;
+        set.forEach(System.out::println);
+
+        //删除
+        long dele = setOperations.remove("Sets","戴森");
+        System.out.println(dele);
+    }
+
+    /**
+     * RedisTemplate 操作SortedSet类型数据
+     */
+    @Test
+    public void testSortedSet() {
+
+        //通过Redis模板类，取得键值类型对应的操作类
+        ZSetOperations<String,Object> zSetOperations = redisTemplate.opsForZSet();
+
+        //设值
+        zSetOperations.add("ZSets","牛二",12D);
+        zSetOperations.add("ZSets","张三",13D);
+        zSetOperations.add("ZSets","李四",14D);
+        zSetOperations.add("ZSets","王五",15D);
+        zSetOperations.add("ZSets","戴森",16D);
+
+        //取值
+        long size = zSetOperations.size("ZSets");
+        System.out.println(size);
+
+        Set<Object> set = zSetOperations.range("ZSets",0,-1);
+
+        assert set != null;
+        set.forEach(System.out::println);
+
+        //删除
+        long dele = zSetOperations.remove("ZSets","戴森");
+        System.out.println(dele);
+    }
+
+    /**
+     * RedisTemplate 查询所有key
+     */
+    @Test
+    public void testKeys() {
+        Set<String> keys = redisTemplate.keys("*");
+        assert keys != null;
+        keys.forEach(System.out::println);
+    }
+
+    /**
+     * RedisTemplate 操作失效时间
+     */
+    @Test
+    public void testExpired() {
+        //设值时设置失效时间
+        ValueOperations<String,Object> valueOperations = redisTemplate.opsForValue();
+        valueOperations.set("code","123456",30, TimeUnit.SECONDS);
+
+        //给已存在值设置失效时间
+        redisTemplate.expire("code",18,TimeUnit.SECONDS);
+        //查询失效时间
+        long time = redisTemplate.getExpire("code",TimeUnit.SECONDS);
+        System.out.println(time);
     }
 }
