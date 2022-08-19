@@ -144,11 +144,11 @@ public class LettuceDemoApplicationTests {
     public void testList() {
 
         //通过Redis模板类，取得键值类型对应的操作类
-        ListOperations<String,Object> listOperations = redisTemplate.opsForList();
+        ListOperations<String, Object> listOperations = redisTemplate.opsForList();
 
         //设值
-        listOperations.leftPush("students","牛二");
-        listOperations.leftPush("students","马妞");
+        listOperations.leftPush("students", "牛二");
+        listOperations.leftPush("students", "马妞");
         listOperations.leftPushAll("students", "张三", "李四", "王五", "戴森");
 
         listOperations.rightPush("students", "哈哈儿");
